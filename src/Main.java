@@ -4,119 +4,96 @@ public class Main {
     GLHimmel himmel;
     GLBoden boden;
     GLKamera kamera;
-    GLTastatur input;
+    GLTastatur tastatur;
     GLMaus maus;
     GLLicht licht;
 
+    Auto auto;
+
     byte kameraAbstand;
-    byte kameraHoehe;
+    byte kameraHohe;
+    double kameraX;
+    double kameraZ;
 
-    GLWuerfel wurfel;
-    double geschwindigkeit = 0;
-    double beschleunigung = 0.5;
-    double hochstgeschwindigkeit = 10;
-    double bremskraft = 1;
-    double reibung = 0.2;
-    double drehwinkel = 0;
-    double drehgeschwindigkeit = 5;
 
-    double radian;
-    double deltaX;
-    double deltaZ;
-
-//    public static void main(String[] args) {
-//        Main main = new Main();
-//        System.setProperty("sun.java2d.opengl", "True");
-//        main.szene();
-//    }
+    public static void main(String[] args) {
+        Main main = new Main();
+        System.setProperty("sun.java2d.opengl", "True");
+        main.szene();
+    }
 
     public void szene() {
         himmel = new GLHimmel("assets/sunflowers_puresky.jpg");
         boden = new GLBoden("assets/aerial_grass_rock_diff_2k.jpg");
         licht = new GLLicht();
 
+        auto = new Auto(0, 0, 0);
+
         kamera = new GLKamera(1200, 900);
         kameraAbstand = 35;
-        kameraHoehe = 15;
+        kameraHohe = 15;
 
-        input = new GLTastatur();
+        tastatur = new GLTastatur();
         maus = new GLMaus();
 
-        wurfel = new GLWuerfel(0, 0, 0, 15);
-        deltaX = 0;
-        deltaZ = 0;
 
-        while (!input.esc()) {
-            kamera.setzeBlickpunkt(wurfel.gibX(), wurfel.gibY(), wurfel.gibZ());
-            kamera.setzePosition(wurfel.gibX(), wurfel.gibY() + kameraHoehe, wurfel.gibZ() + kameraAbstand);
-            //kamera.rotiere(drehwinkel, wurfel.gibX(), wurfel.gibY(), wurfel.gibZ(), 0, 25, 50);
-            Sys.warte(15);
+        while (!tastatur.esc()) {
+            kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians());
+            kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians());
 
+            kamera.setzePosition(kameraX, auto.gibY() + kameraHohe, kameraZ);
+            kamera.setzeBlickpunkt(auto.gibX(), auto.gibY(), auto.gibZ());
 
-            if (input.oben()) {
-                kameraHoehe += 1;
-                if (kameraHoehe > 0) {
-                    kameraHoehe = 0;
+            if (tastatur.oben()) {
+                kameraHohe += 1;
+                if (kameraHohe < 0) {
+                    kameraHohe = 127;
                 }
-            } else if (input.unten()) {
-                kameraHoehe -= 1;
-                if (kameraHoehe > 0) {
-                    kameraHoehe = 0;
+            } else if (tastatur.unten()) {
+                kameraHohe -= 1;
+                if (kameraHohe < 0) {
+                    kameraHohe = 0;
                 }
             }
 
-            if (input.links()) {
+            if (tastatur.links()) {
                 kameraAbstand -= 1;
                 if (kameraAbstand < 0) {
                     kameraAbstand = 0;
                 }
-            } else if (input.rechts()) {
+            } else if (tastatur.rechts()) {
                 kameraAbstand += 1;
                 if (kameraAbstand < 0) {
-                    kameraAbstand = 0;
+                    kameraAbstand = 127;
                 }
             }
 
+            if (tastatur.istGedrueckt('q')) {
+                kamera.rotiere(1, auto.gibX(), auto.gibY(), auto.gibZ(), 0, 25, 50);
+            }
 
-            if (input.istGedrueckt('w')) {
-                geschwindigkeit += beschleunigung;
-                if (geschwindigkeit > hochstgeschwindigkeit) {
-                    geschwindigkeit = hochstgeschwindigkeit;
-                }
-            } else if (input.istGedrueckt('s')) {
-                geschwindigkeit -= bremskraft;
-                if (geschwindigkeit < -hochstgeschwindigkeit) {
-                    geschwindigkeit = -hochstgeschwindigkeit;
-                }
+            if (tastatur.istGedrueckt('e')) {
+                kamera.rotiere(-1, auto.gibX(), auto.gibY(), auto.gibZ(), 0, 25, 50);
+            }
+
+            if (tastatur.istGedrueckt('w')) {
+                auto.beschleunigen();
+            } else if (tastatur.istGedrueckt('s')) {
+                auto.bremsen();
             } else {
-                if (geschwindigkeit > 0) {
-                    geschwindigkeit -= reibung;
-                    if (geschwindigkeit < 0) {
-                        geschwindigkeit = 0;
-                    }
-                } else if (geschwindigkeit < 0) {
-                    geschwindigkeit += reibung;
-                    if (geschwindigkeit > 0) {
-                        geschwindigkeit = 0;
-                    }
-                }
+                auto.reibung();
             }
 
-            if (input.istGedrueckt('a')) {
-                drehwinkel -= drehgeschwindigkeit;
+            if (tastatur.istGedrueckt('a')) {
+                auto.lenkeLinks();
             }
-            if (input.istGedrueckt('d')) {
-                drehwinkel += drehgeschwindigkeit;
+            if (tastatur.istGedrueckt('d')) {
+                auto.lenkeRechts();
             }
 
-            radian = Math.toRadians(drehwinkel);
-            deltaX = geschwindigkeit * Math.sin(radian);
-            deltaZ = geschwindigkeit * Math.cos(radian);
+            auto.bewege();
 
-            wurfel.verschiebe(deltaX, 0, deltaZ);
-            wurfel.setzeDrehung(0, drehwinkel, 0);
-
-
+            Sys.warte(16);
         }
 
         Sys.beenden();
