@@ -3,17 +3,14 @@ import GLOOP.*;
 public class Main {
     GLHimmel himmel;
     GLBoden boden;
-    GLKamera kamera;
+    Kamera kamera;
     GLTastatur tastatur;
     GLMaus maus;
     GLLicht licht;
 
     Auto auto;
 
-    byte kameraAbstand;
-    byte kameraHohe;
-    double kameraX;
-    double kameraZ;
+    Hindernis[] hindernisse;
 
 
     public static void main(String[] args) {
@@ -29,51 +26,57 @@ public class Main {
 
         auto = new Auto(0, 0, 0);
 
-        kamera = new GLKamera(1200, 900);
-        kameraAbstand = 35;
-        kameraHohe = 15;
+        hindernisse = new Hindernis[20];
+        for (int i = 0; i < hindernisse.length; i++) {
+            int randomX, randomZ;
+            boolean kollision;
+            do {
+                randomX = (int) (Math.random() * 501) - 250;
+                randomZ = (int) (Math.random() * 501) - 250;
+                kollision = false;
+                for (int j = 0; j < i; j++) {
+                    if (randomX + 10 > hindernisse[j].gibX() - hindernisse[j].gibBreite() / 2 && randomX - 10 < hindernisse[j].gibX() + hindernisse[j].gibBreite() / 2 &&
+                            randomZ + 10 > hindernisse[j].gibZ() - hindernisse[j].gibTiefe() / 2 && randomZ - 10 < hindernisse[j].gibZ() + hindernisse[j].gibTiefe() / 2
+                            && hindernisse[j].gibX() + (double) hindernisse[j].gibBreite() / 2 > auto.gibX() - 10 && hindernisse[j].gibX() - (double) hindernisse[j].gibBreite() / 2 < auto.gibX() + 10
+                            && hindernisse[j].gibZ() + (double) hindernisse[j].gibTiefe() / 2 > auto.gibZ() - 10 && hindernisse[j].gibZ() - (double) hindernisse[j].gibTiefe() / 2 < auto.gibZ() + 10) {
+                        kollision = true;
+                        break;
+                    }
+                }
+            } while (kollision);
+            hindernisse[i] = new Hindernis(randomX, randomZ, 20, 25, 20);
+
+
+        }
+
+        kamera = new Kamera(1200, 900, auto);
 
         tastatur = new GLTastatur();
         maus = new GLMaus();
 
+        int kameraGeschwindigkeit = 1;
 
         while (!tastatur.esc()) {
-            kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians());
-            kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians());
-
-            kamera.setzePosition(kameraX, auto.gibY() + kameraHohe, kameraZ);
-            kamera.setzeBlickpunkt(auto.gibX(), auto.gibY(), auto.gibZ());
+            kamera.aktualisiere();
 
             if (tastatur.oben()) {
-                kameraHohe += 1;
-                if (kameraHohe < 0) {
-                    kameraHohe = 127;
-                }
+                kamera.erhoeheHoheKamera(kameraGeschwindigkeit);
             } else if (tastatur.unten()) {
-                kameraHohe -= 1;
-                if (kameraHohe < 0) {
-                    kameraHohe = 0;
-                }
+                kamera.verringereHoheKamera(kameraGeschwindigkeit);
             }
 
             if (tastatur.links()) {
-                kameraAbstand -= 1;
-                if (kameraAbstand < 0) {
-                    kameraAbstand = 0;
-                }
+                kamera.verringereAbstandKamera(kameraGeschwindigkeit);
             } else if (tastatur.rechts()) {
-                kameraAbstand += 1;
-                if (kameraAbstand < 0) {
-                    kameraAbstand = 127;
-                }
+                kamera.erhoeheAbstandKamera(kameraGeschwindigkeit);
             }
 
             if (tastatur.istGedrueckt('q')) {
-                kamera.rotiere(1, auto.gibX(), auto.gibY(), auto.gibZ(), 0, 25, 50);
+                kamera.rotiere(kameraGeschwindigkeit);
             }
 
             if (tastatur.istGedrueckt('e')) {
-                kamera.rotiere(-1, auto.gibX(), auto.gibY(), auto.gibZ(), 0, 25, 50);
+                kamera.rotiere(-kameraGeschwindigkeit);
             }
 
             if (tastatur.istGedrueckt('w')) {
@@ -91,7 +94,7 @@ public class Main {
                 auto.lenkeRechts();
             }
 
-            auto.bewege();
+            auto.bewege(hindernisse);
 
             Sys.warte(16);
         }

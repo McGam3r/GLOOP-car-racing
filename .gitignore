@@ -27,6 +27,11 @@ replay_pid*
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+**/.idea/
 
 ### VS Code ###
 .vscode/
+
+### Custom ###
+**/planung/
+*.iml

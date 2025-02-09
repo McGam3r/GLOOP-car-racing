@@ -21,6 +21,24 @@ public class Auto {
         deltaZ = 0;
     }
 
+    public void bewege(Hindernis hindernisse[]) {
+        radian = Math.toRadians(drehwinkel);
+        deltaX = Math.sin(radian) * geschwindigkeit;
+        deltaZ = Math.cos(radian) * geschwindigkeit;
+
+        wurfel.verschiebe(deltaX, 0, deltaZ);
+        wurfel.setzeDrehung(0, drehwinkel, 0);
+
+        for (Hindernis hindernis : hindernisse) {
+            if (kollisionAbfrage(hindernis)) {
+                // Kollision erkannt, Bewegung rückgängig machen
+                wurfel.verschiebe(-deltaX, 0, -deltaZ);
+                geschwindigkeit = 0;
+                break;
+            }
+        }
+    }
+
     public void beschleunigen() {
         geschwindigkeit += beschleunigung;
         if (geschwindigkeit > hochstgeschwindigkeit) {
@@ -49,19 +67,10 @@ public class Auto {
         }
     }
 
-    public void bewege() {
-        radian = Math.toRadians(drehwinkel);
-        deltaX = Math.sin(radian) * geschwindigkeit;
-        deltaZ = Math.cos(radian) * geschwindigkeit;
-
-        wurfel.verschiebe(deltaX, 0, deltaZ);
-        wurfel.setzeDrehung(0, drehwinkel, 0);
-    }
-
     public void lenkeLinks() {
         if (geschwindigkeit != 0) {
             drehwinkel += drehgeschwindigkeit;
-            if(drehwinkel >= 360){
+            if (drehwinkel >= 360) {
                 drehwinkel = 0;
             }
         }
@@ -70,9 +79,18 @@ public class Auto {
     public void lenkeRechts() {
         if (geschwindigkeit != 0) {
             drehwinkel -= drehgeschwindigkeit;
-            if(drehwinkel >= -360){
+            if (drehwinkel <= -360) {
                 drehwinkel = 0;
             }
+        }
+    }
+
+    public boolean kollisionAbfrage(Hindernis hindernis) {
+        if (hindernis.gibX() + (double) hindernis.gibBreite() / 2 > gibX() - 7.5 && hindernis.gibX() - (double) hindernis.gibBreite() / 2 < gibX() + 7.5
+                && hindernis.gibZ() + (double) hindernis.gibTiefe() / 2 > gibZ() - 7.5 && hindernis.gibZ() - (double) hindernis.gibTiefe() / 2 < gibZ() + 7.5) {
+            return true;
+        } else {
+            return false;
         }
     }
 
