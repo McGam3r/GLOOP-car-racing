@@ -6,12 +6,7 @@ public class Kamera {
 
     private byte kameraAbstand;
     private byte kameraHohe;
-    private double kameraX;
-    private double kameraZ;
-
-    private double rotationWinkel;
-    private double rotationX;
-    private double rotationZ;
+    private double rotationsWinkel;
 
     Kamera(int pB, int pH, Auto pAuto) {
         auto = pAuto;
@@ -21,13 +16,11 @@ public class Kamera {
     }
 
     public void aktualisiere() {
-        kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians());
-        kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians());
+        double radian = Math.toRadians(rotationsWinkel);
+        double kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians() + radian);
+        double kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians() + radian);
 
-        //rotationX = kameraAbstand * Math.sin(Math.toRadians(rotationWinkel));
-        //SrotationZ = kameraAbstand * Math.cos(Math.toRadians(rotationWinkel));
-
-        kamera.setzePosition(kameraX - rotationX, auto.gibY() + kameraHohe, kameraZ - rotationZ);
+        kamera.setzePosition(kameraX, auto.gibY() + kameraHohe, kameraZ);
         kamera.setzeBlickpunkt(auto.gibX(), auto.gibY(), auto.gibZ());
     }
 
@@ -60,8 +53,12 @@ public class Kamera {
     }
 
     public void rotiere(int pW) {
-        //kamera.rotiere(pW, auto.gibX(), auto.gibY(), auto.gibZ(), 0, 25, 50);
-        rotationWinkel += pW;
+        rotationsWinkel += pW;
+        if (rotationsWinkel >= 360) {
+            rotationsWinkel -= 360;
+        } else if (rotationsWinkel < 0) {
+            rotationsWinkel += 360;
+        }
     }
 
 

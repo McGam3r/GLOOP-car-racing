@@ -72,11 +72,11 @@ public class Main {
             }
 
             if (tastatur.istGedrueckt('q')) {
-                kamera.rotiere(kameraGeschwindigkeit);
+                kamera.rotiere(-kameraGeschwindigkeit * 2);
             }
 
             if (tastatur.istGedrueckt('e')) {
-                kamera.rotiere(-kameraGeschwindigkeit);
+                kamera.rotiere(kameraGeschwindigkeit * 2);
             }
 
             if (tastatur.istGedrueckt('w')) {
