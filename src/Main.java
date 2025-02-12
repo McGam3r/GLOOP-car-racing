@@ -79,10 +79,6 @@ public class Main {
                 kamera.rotiere(kameraGeschwindigkeit * 2);
             }
 
-            if (tastatur.istGedrueckt('r')) {
-                kamera.reset();
-            }
-
             if (tastatur.istGedrueckt('w')) {
                 auto.beschleunigen();
             } else if (tastatur.istGedrueckt('s')) {

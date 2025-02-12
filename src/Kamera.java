@@ -61,11 +61,5 @@ public class Kamera {
         }
     }
 
-    public void reset() {
-        kameraAbstand = 35;
-        kameraHohe = 15;
-        rotationsWinkel = 0;
-    }
-
 
 }
