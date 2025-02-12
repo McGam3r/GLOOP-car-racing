@@ -1,7 +1,5 @@
 # Car racing game
 
----
-
 ## Description
 
 This is a Java-based car racing game developed for a school project (in germany Facharbeit)
