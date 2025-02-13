@@ -5,7 +5,6 @@ public class Main {
     GLBoden boden;
     Kamera kamera;
     GLTastatur tastatur;
-    GLMaus maus;
     GLLicht licht;
 
     Auto auto;
@@ -20,6 +19,7 @@ public class Main {
     }
 
     public void szene() {
+        // Himmel, Boden, Licht, Auto und Hindernisse werden erstellt
         himmel = new GLHimmel("assets/sunflowers_puresky.jpg");
         boden = new GLBoden("assets/aerial_grass_rock_diff_2k.jpg");
         licht = new GLLicht();
@@ -31,14 +31,18 @@ public class Main {
             int randomX, randomZ;
             boolean kollision;
             do {
+                // Zufällige Position für Hindernis
                 randomX = (int) (Math.random() * 501) - 250;
                 randomZ = (int) (Math.random() * 501) - 250;
                 kollision = false;
                 for (int j = 0; j < i; j++) {
+                    // Kollisionserkennung: Wenn das Hindernis mit einem anderen Hindernis oder dem Auto kollidiert, wird ein neues Hindernis generiert "+10" und "-10" sind die Toleranzwerte/Abstand
                     if (randomX + 10 > hindernisse[j].gibX() - hindernisse[j].gibBreite() / 2 && randomX - 10 < hindernisse[j].gibX() + hindernisse[j].gibBreite() / 2 &&
                             randomZ + 10 > hindernisse[j].gibZ() - hindernisse[j].gibTiefe() / 2 && randomZ - 10 < hindernisse[j].gibZ() + hindernisse[j].gibTiefe() / 2
-                            && hindernisse[j].gibX() + (double) hindernisse[j].gibBreite() / 2 > auto.gibX() - 10 && hindernisse[j].gibX() - (double) hindernisse[j].gibBreite() / 2 < auto.gibX() + 10
-                            && hindernisse[j].gibZ() + (double) hindernisse[j].gibTiefe() / 2 > auto.gibZ() - 10 && hindernisse[j].gibZ() - (double) hindernisse[j].gibTiefe() / 2 < auto.gibZ() + 10) {
+                            || hindernisse[j].gibX() + (double) hindernisse[j].gibBreite() / 2 > auto.gibX() - 10 && hindernisse[j].gibX() - (double) hindernisse[j].gibBreite() / 2 < auto.gibX() + 10
+                            && hindernisse[j].gibZ() + (double) hindernisse[j].gibTiefe() / 2 > auto.gibZ() - 10 && hindernisse[j].gibZ() - (double) hindernisse[j].gibTiefe() / 2 < auto.gibZ() + 10
+                            || randomX + (double) hindernisse[j].gibBreite() / 2 > auto.gibX() - 10 && randomX - (double) hindernisse[j].gibBreite() / 2 < auto.gibX() + 10
+                            && randomZ + (double) hindernisse[j].gibTiefe() / 2 > auto.gibZ() - 10 && randomZ - (double) hindernisse[j].gibTiefe() / 2 < auto.gibZ() + 10) {
                         kollision = true;
                         break;
                     }
@@ -52,13 +56,14 @@ public class Main {
         kamera = new Kamera(1200, 900, auto);
 
         tastatur = new GLTastatur();
-        maus = new GLMaus();
 
         int kameraGeschwindigkeit = 1;
 
         while (!tastatur.esc()) {
+            // Kamera wird aktualisiert und bewegt
             kamera.aktualisiere();
 
+            // Kamera steuerung
             if (tastatur.oben()) {
                 kamera.erhoeheHoheKamera(kameraGeschwindigkeit);
             } else if (tastatur.unten()) {
@@ -83,6 +88,7 @@ public class Main {
                 kamera.reset();
             }
 
+            // Auto steuerung
             if (tastatur.istGedrueckt('w')) {
                 auto.beschleunigen();
             } else if (tastatur.istGedrueckt('s')) {
@@ -98,6 +104,7 @@ public class Main {
                 auto.lenkeRechts();
             }
 
+            // Auto wird bewegt/aktualisiert + Kollisionserkennung
             auto.bewege(hindernisse);
 
             Sys.warte(16);

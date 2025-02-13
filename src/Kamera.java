@@ -1,8 +1,8 @@
-import GLOOP.*;
+import GLOOP.GLKamera;
 
 public class Kamera {
-    GLKamera kamera;
-    Auto auto;
+    private GLKamera kamera;
+    private Auto auto;
 
     private byte kameraAbstand;
     private byte kameraHohe;
@@ -16,10 +16,11 @@ public class Kamera {
     }
 
     public void aktualisiere() {
-        double radian = Math.toRadians(rotationsWinkel);
-        double kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians() + radian);
-        double kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians() + radian);
+        // Berechnung: Kamera wird um das/mit das Auto bewegt
+        double kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians() + Math.toRadians(rotationsWinkel));
+        double kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians() + Math.toRadians(rotationsWinkel));
 
+        // Kamera wird auf die neue Position gesetzt
         kamera.setzePosition(kameraX, auto.gibY() + kameraHohe, kameraZ);
         kamera.setzeBlickpunkt(auto.gibX(), auto.gibY(), auto.gibZ());
     }

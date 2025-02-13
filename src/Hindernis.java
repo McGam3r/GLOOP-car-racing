@@ -1,4 +1,4 @@
-import GLOOP.*;
+import GLOOP.GLQuader;
 
 public class Hindernis {
     private GLQuader hindernis;

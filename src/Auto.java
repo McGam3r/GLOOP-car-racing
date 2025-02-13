@@ -1,15 +1,15 @@
-import GLOOP.*;
+import GLOOP.GLWuerfel;
 
 public class Auto {
-    GLWuerfel wurfel;
+    private GLWuerfel wurfel;
 
     private double geschwindigkeit = 0;
-    private double beschleunigung = 0.5;
-    private double hochstgeschwindigkeit = 10;
-    private double bremskraft = 1;
-    private double reibung = 0.2;
+    private final double beschleunigung = 0.5;
+    private final double hochstgeschwindigkeit = 10;
+    private final double bremskraft = 1;
+    private final double reibung = 0.2;
     private double drehwinkel = 0;
-    private double drehgeschwindigkeit = 5;
+    private final double drehgeschwindigkeit = 5;
 
     private double radian;
     private double deltaX;
@@ -22,13 +22,16 @@ public class Auto {
     }
 
     public void bewege(Hindernis hindernisse[]) {
+        // Berechnung: Auto bewegungsrichtung
         radian = Math.toRadians(drehwinkel);
         deltaX = Math.sin(radian) * geschwindigkeit;
         deltaZ = Math.cos(radian) * geschwindigkeit;
 
+        // Auto wird bewegt und gedreht
         wurfel.verschiebe(deltaX, 0, deltaZ);
         wurfel.setzeDrehung(0, drehwinkel, 0);
 
+        // Kollisionsabfrage
         for (Hindernis hindernis : hindernisse) {
             if (kollisionAbfrage(hindernis)) {
                 // Kollision erkannt, Bewegung rückgängig machen
@@ -85,6 +88,7 @@ public class Auto {
         }
     }
 
+    // Kollisionsabfrage
     public boolean kollisionAbfrage(Hindernis hindernis) {
         if (hindernis.gibX() + (double) hindernis.gibBreite() / 2 > gibX() - 7.5 && hindernis.gibX() - (double) hindernis.gibBreite() / 2 < gibX() + 7.5
                 && hindernis.gibZ() + (double) hindernis.gibTiefe() / 2 > gibZ() - 7.5 && hindernis.gibZ() - (double) hindernis.gibTiefe() / 2 < gibZ() + 7.5) {
