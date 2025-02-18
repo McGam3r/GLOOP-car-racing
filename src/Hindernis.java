@@ -6,15 +6,6 @@ public class Hindernis {
     private final int hohe;
     private final int tiefe;
 
-    Hindernis(int pX, int pY, int pZ, int pBreite, int pHohe, int pTiefe) {
-        breite = pBreite;
-        hohe = pHohe;
-        tiefe = pTiefe;
-
-        hindernis = new GLQuader(pX, pY, pZ, pBreite, pHohe, pTiefe);
-        hindernis.setzeTextur("assets/red_brick_diff_4k.jpg");
-    }
-
     Hindernis(int pX, int pZ, int pBreite, int pHohe, int pTiefe) {
         breite = pBreite;
         hohe = pHohe;

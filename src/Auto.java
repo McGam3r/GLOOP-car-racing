@@ -7,10 +7,14 @@ public class Auto {
     private final int[] reifenPosX;
     private final int[] reifenPosZ;
 
-    private double geschwindigkeit = 0;
+    private double geschwindigkeit;
     private final double hochstgeschwindigkeit = 10;
-    private double drehwinkel = 0;
+
+    private double drehwinkel;
     private final double drehgeschwindigkeit = 5;
+
+    private double lenkwinkel;
+    private final double lenkgeschwindigkeit = 1;
 
     private double radian;
     private double deltaX;
@@ -26,7 +30,7 @@ public class Auto {
         reifenPosZ = new int[]{5, 5, -3, -3};
 
         for (int i = 0; i < reifen.length; i++) {
-            reifen[i] = new GLZylinder(pX + reifenPosX[i], pY - 1, pZ + reifenPosZ[i], 1, 0.5);
+            reifen[i] = new GLZylinder(pX + reifenPosX[i], pY - 1, pZ + reifenPosZ[i], 1, 1);
         }
         for (GLZylinder zylinder : reifen) {
             zylinder.setzeDrehung(0, 90, 0);
@@ -38,6 +42,13 @@ public class Auto {
     }
 
     public void bewege(Hindernis[] hindernisse) {
+        if (geschwindigkeit != 0) {
+            drehwinkel += lenkwinkel;
+            if (drehwinkel >= 360 || drehwinkel <= -360) {
+                drehwinkel = 0;
+            }
+        }
+
         // Berechnung: Auto bewegungsrichtung
         radian = Math.toRadians(drehwinkel);
         deltaX = Math.sin(radian) * geschwindigkeit;
@@ -104,20 +115,22 @@ public class Auto {
     }
 
     public void lenkeLinks() {
-        if (geschwindigkeit != 0) {
-            drehwinkel += drehgeschwindigkeit;
-            if (drehwinkel >= 360) {
-                drehwinkel = 0;
-            }
+        if (lenkwinkel < 5) {
+            lenkwinkel += lenkgeschwindigkeit;
         }
     }
 
     public void lenkeRechts() {
-        if (geschwindigkeit != 0) {
-            drehwinkel -= drehgeschwindigkeit;
-            if (drehwinkel <= -360) {
-                drehwinkel = 0;
-            }
+        if (lenkwinkel > -5) {
+            lenkwinkel -= lenkgeschwindigkeit;
+        }
+    }
+
+    public void zentriereLenkung() {
+        if (lenkwinkel > 0) {
+            lenkwinkel -= 0.5;
+        } else if (lenkwinkel < 0) {
+            lenkwinkel += 0.5;
         }
     }
 

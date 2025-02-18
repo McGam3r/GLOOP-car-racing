@@ -99,9 +99,10 @@ public class Main {
 
             if (tastatur.istGedrueckt('a')) {
                 auto.lenkeLinks();
-            }
-            if (tastatur.istGedrueckt('d')) {
+            } else if (tastatur.istGedrueckt('d')) {
                 auto.lenkeRechts();
+            } else {
+                auto.zentriereLenkung();
             }
 
             // Auto wird bewegt/aktualisiert + Kollisionserkennung

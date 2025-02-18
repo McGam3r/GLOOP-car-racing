@@ -10,13 +10,13 @@ public class Kamera {
 
     Kamera(int pB, int pH, Auto pAuto) {
         auto = pAuto;
-        kamera = new GLKamera(1200, 900);
+        kamera = new GLKamera(pB, pH);
         kameraAbstand = 35;
         kameraHohe = 15;
     }
 
     public void aktualisiere() {
-        // Berechnung: Kamera wird um das/mit das Auto bewegt
+        // Berechnung: Kamera wird um das/mit dem Auto bewegt
         double kameraX = auto.gibX() - kameraAbstand * Math.sin(auto.getRadians() + Math.toRadians(rotationsWinkel));
         double kameraZ = auto.gibZ() - kameraAbstand * Math.cos(auto.getRadians() + Math.toRadians(rotationsWinkel));
 
