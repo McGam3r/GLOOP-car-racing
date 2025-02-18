@@ -1,10 +1,10 @@
 import GLOOP.GLQuader;
 
 public class Hindernis {
-    private GLQuader hindernis;
-    private int breite;
-    private int hohe;
-    private int tiefe;
+    private final GLQuader hindernis;
+    private final int breite;
+    private final int hohe;
+    private final int tiefe;
 
     Hindernis(int pX, int pY, int pZ, int pBreite, int pHohe, int pTiefe) {
         breite = pBreite;

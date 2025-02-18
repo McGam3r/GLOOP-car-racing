@@ -1,8 +1,8 @@
 import GLOOP.GLKamera;
 
 public class Kamera {
-    private GLKamera kamera;
-    private Auto auto;
+    private final GLKamera kamera;
+    private final Auto auto;
 
     private byte kameraAbstand;
     private byte kameraHohe;
