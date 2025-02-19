@@ -39,4 +39,8 @@ public class Hindernis {
     public int gibTiefe() {
         return tiefe;
     }
+
+    public GLQuader gibHindernis() {
+        return hindernis;
+    }
 }

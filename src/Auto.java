@@ -1,4 +1,5 @@
-import GLOOP.*;
+import GLOOP.GLQuader;
+import GLOOP.GLZylinder;
 
 public class Auto {
     private final GLQuader motorhaube;
@@ -36,7 +37,6 @@ public class Auto {
             zylinder.setzeDrehung(0, 90, 0);
             zylinder.setzeFarbe(0, 0, 0);
         }
-
         deltaX = 0;
         deltaZ = 0;
     }
