@@ -1,9 +1,11 @@
 import GLOOP.GLMaterial;
 import GLOOP.GLObjekt;
 import GLOOP.GLTorus;
+import GLOOP.GLTafel;
 
 public class Ziel {
     GLTorus ziel;
+    GLTafel zeitAnzeige;
     private final int x;
     private final int z;
     private final int winkel;
@@ -17,6 +19,9 @@ public class Ziel {
         ziel.setzeMaterial(GLMaterial.SMARAGD);
         ziel.setzeSkalierung(1, 2, 1);
         ziel.setzeDrehung(0, winkel, 0);
+
+        zeitAnzeige = new GLTafel(x, 50, z, 50, 25);
+        zeitAnzeige.setzeDrehung(0, winkel + 180, 0);
     }
 
     public double gibDistanz(GLObjekt objekt) {
@@ -33,5 +38,9 @@ public class Ziel {
                 && z + 15 * Math.cos(Math.toRadians(winkel)) > auto.gibX()
                 && x - 15 * Math.sin(Math.toRadians(winkel)) < auto.gibZ()
                 && z - 15 * Math.cos(Math.toRadians(winkel)) > auto.gibZ();
+    }
+
+    public void setzeZeitAnzeige(String text) {
+        zeitAnzeige.setzeText(text, 16);
     }
 }

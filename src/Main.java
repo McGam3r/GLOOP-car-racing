@@ -13,6 +13,8 @@ public class Main {
 
     Ziel ziel;
 
+    double startZeit;
+
     public static void main(String[] args) {
         Main main = new Main();
         System.setProperty("sun.java2d.opengl", "True");
@@ -65,6 +67,12 @@ public class Main {
         tastatur = new GLTastatur();
 
         final int kameraGeschwindigkeit = 1;
+
+        kamera.aktualisiere();
+        while (!tastatur.istGedrueckt()) {
+            Sys.warte();
+        }
+        startZeit = System.currentTimeMillis();
 
         while (!tastatur.esc()) {
             this.szene(kameraGeschwindigkeit);
@@ -121,6 +129,8 @@ public class Main {
 
         // Auto wird bewegt/aktualisiert + Kollisionserkennung
         auto.bewege(hindernisse);
+
+        ziel.setzeZeitAnzeige("Zeit: " + Math.round((System.currentTimeMillis() - startZeit) / 1000) + "s");
 
         Sys.warte(16);
     }
